@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Editor | Magical Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700;900&family=Mulish:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<style>
+  :root {
+    /* Color Palette */
+    --bg-dark: #000000;
+    --bg-panel: #1E2046;
+    --text-main: #EDEEFF;
+    --accent-primary: #A0A4ff;
+    --accent-glow: rgba(160, 164, 255, 0.4);
+    
+    /* Social Colors */
+    --color-ig: #E1306C;
+    --color-yt: #FF0000;
+    --color-li: #0A66C2;
+    --color-bh: #1769ff;
+    --color-mail: #ea4335;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { 
+    background-color: var(--bg-dark); 
+    color: var(--text-main); 
+    font-family: 'Mulish', sans-serif; 
+    overflow-x: hidden; 
+    scroll-behavior: smooth; 
+  }
+
+  /* --- BACKGROUND --- */
+  .magic-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at 50% 50%, var(--bg-panel) 0%, var(--bg-dark) 100%); z-index: -2; }
+  .dust-particles { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: radial-gradient(var(--accent-glow) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.15; z-index: -1; animation: drift 20s linear infinite; }
+  @keyframes drift { 0% { transform: translateY(0) translateX(0); } 100% { transform: translateY(-50px) translateX(-50px); } }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 5%; }
+  .text-center { text-align: center; }
+  
+  .section-title { 
+    font-family: 'Noto Sans', sans-serif; 
+    font-size: 3.5rem; 
+    font-weight: 900; 
+    color: #ffffff; 
+    text-shadow: 0 0 20px var(--accent-glow); 
+    margin-bottom: 2rem; 
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .spell-tag { font-family: 'Noto Sans', sans-serif; color: var(--accent-primary); font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+
+  .wand-divider {
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent-primary) 50%, transparent 100%);
+    box-shadow: 0 0 20px 2px var(--accent-primary);
+    opacity: 0.7; transform-origin: center;
+  }
+
+  /* ========================================================
+     FLOATING NAVIGATION (NEW)
+     ======================================================== */
+  .magic-nav {
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(30, 32, 70, 0.5);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--accent-glow);
+    border-radius: 50px;
+    padding: 8px 15px;
+    display: flex;
+    gap: 5px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(160, 164, 255, 0.1);
+    animation: nav-float 0.8s ease-out forwards;
+  }
+
+  @keyframes nav-float {
+    0% { top: -50px; opacity: 0; }
+    100% { top: 25px; opacity: 1; }
+  }
+
+  .nav-link {
+    color: var(--text-main);
+    text-decoration: none;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+  }
+
+  .nav-link:hover {
+    color: var(--bg-dark);
+    background: var(--accent-primary);
+    box-shadow: 0 0 15px var(--accent-primary);
+    transform: translateY(-2px);
+  }
+
+  /* ========================================================
+     HERO SECTION
+     ======================================================== */
+  .hero-wrapper { height: 100vh; position: relative; perspective: 1200px; overflow: hidden; transform-origin: center top; }
+  .hero { height: 100%; display: grid; grid-template-columns: 1fr 1fr; align-items: center; position: relative; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
+  
+  .hero-content { position: relative; z-index: 2; transform: translateZ(60px); pointer-events: none; }
+  .hero h1 { font-family: 'Noto Sans', sans-serif; font-size: 5vw; line-height: 1.1; margin-bottom: 1rem; font-weight: 900; }
+  .hero h1 span { display: block; }
+  .hero-sub { font-size: 1.2rem; color: var(--text-main); opacity: 0.8; max-width: 600px; line-height: 1.6; }
+  
+  .hero-visual { position: relative; width: 100%; height: 500px; display: flex; justify-content: center; align-items: center; transform: translateZ(30px); pointer-events: none; }
+  
+  /* --- LIVING LOGO ORB --- */
+  .magic-orb { 
+    width: 250px; height: 250px; 
+    border-radius: 50%; 
+    box-shadow: 0 0 60px var(--accent-primary), inset 0 0 30px var(--accent-primary); 
+    display: flex; justify-content: center; align-items: center; 
+    position: relative; z-index: 5; 
+    animation: pulse-orb-glow 5s ease-in-out infinite; 
+    transform-style: preserve-3d;
+    background: radial-gradient(circle at center, rgba(160, 164, 255, 0.15), var(--bg-panel) 70%);
+    overflow: hidden;
+  }
+  
+  .hero-logo {
+    width: 100%; height: 100%; object-fit: cover;
+    mix-blend-mode: screen;
+    opacity: 0; 
+    transform-origin: center center;
+    animation: magical-logo-float 15s ease-in-out infinite; 
+  }
+
+  .orbit-ring { position: absolute; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring-1 { width: 380px; height: 380px; border: 1px dashed var(--accent-primary); opacity: 0.4; animation: orbit 25s linear infinite; }
+  .ring-2 { width: 550px; height: 550px; border: 2px dotted rgba(237, 238, 255, 0.2); animation: orbit-reverse 40s linear infinite; }
+  
+  @keyframes magical-logo-float { 
+    0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+    25% { transform: scale(1.05) rotate(5deg) translateX(-5px); filter: brightness(1.2) hue-rotate(10deg); }
+    50% { transform: scale(1.1) rotate(0deg); filter: brightness(1); }
+    75% { transform: scale(1.05) rotate(-5deg) translateX(5px); filter: brightness(1.2) hue-rotate(-10deg); }
+    100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+  }
+  @keyframes orbit { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+  @keyframes orbit-reverse { 100% { transform: translate(-50%, -50%) rotate(-360deg); } }
+  @keyframes pulse-orb-glow { 0%, 100% { box-shadow: 0 0 60px var(--accent-primary), inset 0 0 20px var(--bg-panel); } 50% { box-shadow: 0 0 100px #fff, inset 0 0 50px var(--accent-primary); } }
+
+  /* ========================================================
+     ABOUT SECTION
+     ======================================================== */
+  .about-revelio { padding: 120px 0; display: flex; flex-direction: column; align-items: center; perspective: 1500px; position: relative; z-index: 10; }
+  .revelio-3d-wrapper { width: 100%; max-width: 900px; height: 450px; margin: 0 auto; position: relative; }
+  .revelio-card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s ease-out; border-radius: 20px; box-shadow: 0 40px 80px rgba(0,0,0,0.8); cursor: crosshair; }
+  .revelio-layer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 20px; padding: 50px; display: flex; flex-direction: column; justify-content: center; border: 1px solid var(--accent-glow); }
+  
+  .revelio-obscured { background: linear-gradient(135deg, var(--bg-panel), #050505); z-index: 1; overflow: hidden; }
+  .rune-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(var(--accent-glow) 2px, transparent 2px); background-size: 40px 40px; opacity: 0.3; }
+  .obscured-text { font-family: 'Noto Sans', sans-serif; font-size: 2rem; color: var(--accent-glow); text-align: center; position: relative; z-index: 2; transition: opacity 0.4s; }
+  
+  .revelio-revealed { background: radial-gradient(circle at center, var(--bg-panel) 0%, #050510 100%); z-index: 2; -webkit-mask-image: radial-gradient(circle 250px at var(--rev-x, -500px) var(--rev-y, -500px), black 40%, transparent 100%); mask-image: radial-gradient(circle 250px at var(--rev-x, -500px) var(--rev-y, -500px), black 40%, transparent 100%); transition: -webkit-mask-image 0.1s ease-out; transform: translateZ(1px); will-change: mask-image; }
+  .revelio-revealed::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; box-shadow: inset 0 0 50px var(--accent-primary); pointer-events: none; border-radius: 20px; }
+  .revealed-content { transform: translateZ(50px); position: relative; text-shadow: 0 10px 20px rgba(0,0,0,0.9); }
+  .revealed-content h3 { font-family: 'Noto Sans', sans-serif; font-weight: 700; font-size: 2.5rem; color: var(--text-main); margin-bottom: 20px; text-shadow: 0 0 15px var(--accent-primary); }
+  .revealed-content p { font-size: 1.15rem; line-height: 1.8; color: var(--text-main); margin-bottom: 15px; }
+  .revealed-content strong { color: var(--accent-primary); font-weight: 700; }
+  .revealed-content em { font-style: italic; color: #b3b6ff; }
+
+  .btn-reveal-all { position: absolute; top: 20px; right: 20px; z-index: 20; background: rgba(30, 32, 70, 0.7); border: 1px solid var(--accent-primary); color: var(--accent-primary); font-family: 'Noto Sans', sans-serif; font-size: 0.9rem; font-weight: 700; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; transform: translateZ(60px); }
+  .btn-reveal-all:hover { background: var(--accent-primary); color: var(--bg-dark); box-shadow: 0 0 20px var(--accent-primary); }
+  .revelio-card.unlocked .revelio-revealed { -webkit-mask-image: linear-gradient(black, black) !important; mask-image: linear-gradient(black, black) !important; }
+  .revelio-card.unlocked .obscured-text { opacity: 0; }
+
+  /* ========================================================
+     SKILLS SECTION
+     ======================================================== */
+  .skills { padding: 100px 0; background: rgba(30,32,70,0.2); position: relative; z-index: 11; }
+  .skills-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 50px; }
+  .skill-card-wrapper { animation: float 6s ease-in-out infinite; animation-delay: calc(var(--delay) * 1s); }
+  .skill-card { background: rgba(30, 32, 70, 0.7); backdrop-filter: blur(10px); border: 1px solid var(--accent-glow); border-radius: 16px; padding: 20px 30px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: all 0.4s; min-width: 250px; position: relative; overflow: hidden; }
+  .skill-card:hover { transform: translateY(-10px) scale(1.05); border-color: var(--hover-color); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px var(--hover-color); }
+  .skill-icon { width: 45px; height: 45px; position: relative; z-index: 1; transition: transform 0.4s; }
+  .skill-card:hover .skill-icon { transform: rotate(10deg) scale(1.1); }
+  .skill-name { position: relative; z-index: 1; font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+  @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+
+  /* ========================================================
+     PROJECTS SECTION (The Pensieve)
+     ======================================================== */
+  .pensieve-section { position: relative; background: var(--bg-dark); overflow: hidden; z-index: 12; }
+  .pensieve-vortex { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(30, 32, 70, 0.5) 0%, var(--bg-dark) 80%); z-index: 0; filter: blur(50px); pointer-events: none; transform-origin: center; }
+  .pensieve-header { position: absolute; top: 10%; left: 0; width: 100%; z-index: 10; pointer-events: none; }
+  
+  .pensieve-container { width: 100vw; height: 100vh; display: flex; align-items: center; perspective: 1500px; }
+  .pensieve-track { display: flex; align-items: center; gap: 6vw; padding: 0 50vw 0 10vw; height: max-content; }
+  
+  .memory-landscape, .memory-portrait { flex-shrink: 0; perspective: 1000px; }
+  .memory-landscape { width: 550px; height: 310px; }
+  .memory-portrait { width: 300px; height: 533px; }
+
+  .memory-card { 
+    width: 100%; height: 100%; border: 2px solid var(--accent-glow); border-radius: 12px; 
+    position: relative; display: flex; flex-direction: column; justify-content: flex-end; 
+    padding: 30px; cursor: pointer; transform-style: preserve-3d; transition: transform 0.1s ease-out, border-color 0.4s; 
+  }
+  .memory-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: inherit; background-size: cover; background-position: center; border-radius: 10px; filter: contrast(1.1) saturate(1.1); transform: translateZ(0px); z-index: 0; }
+  .memory-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.5) 100%); border-radius: 10px; z-index: 1; pointer-events: none; transform: translateZ(10px); box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+  .memory-card:hover { border-color: var(--accent-primary); box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 30px var(--accent-glow); }
+  
+  .memory-content { transform: translateZ(60px); pointer-events: none; z-index: 2; position: relative; }
+  .memory-content h3 { font-family: 'Noto Sans', sans-serif; font-size: 1.8rem; color: #fff; margin-bottom: 5px; text-shadow: 0 5px 10px #000; font-weight: 700; }
+  .memory-content p { color: var(--accent-primary); font-family: 'Noto Sans', sans-serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 5px #000; font-weight: 700; }
+  
+  .memory-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(90px); width: 70px; height: 70px; border-radius: 50%; background: rgba(30,32,70,0.6); backdrop-filter: blur(5px); border: 2px solid var(--accent-primary); color: var(--accent-primary); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; padding-left: 5px; transition: all 0.3s; z-index: 3; pointer-events: none; }
+  .memory-card:hover .memory-play-btn { background: var(--accent-primary); color: var(--bg-dark); transform: translate(-50%, -50%) translateZ(120px) scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+  /* ========================================================
+     TESTIMONIALS SECTION (SCROLLABLE CAROUSEL)
+     ======================================================== */
+  .testimonials-section { 
+    padding: 120px 0; position: relative; overflow: hidden; z-index: 13; 
+    background: linear-gradient(180deg, transparent, rgba(30,32,70,0.4), transparent); 
+  }
+  
+  .testimonials-3d-container { 
+    display: flex; gap: 40px; align-items: center; 
+    perspective: 2000px; margin-top: 40px;
+    padding: 30px 5vw 80px 5vw;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .testimonials-3d-container::-webkit-scrollbar { display: none; }
+  
+  .testimony-card {
+    width: 380px; 
+    flex-shrink: 0; 
+    scroll-snap-align: center; 
+    background: linear-gradient(145deg, var(--bg-panel), #141530);
+    border: 1px solid var(--accent-glow); border-radius: 20px;
+    padding: 40px 30px; position: relative; transform-style: preserve-3d;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s;
+    cursor: grab;
+  }
+  
+  .testimony-card:active { cursor: grabbing; }
+
+  .testimony-card:hover {
+    transform: translateZ(50px) translateY(-15px) rotateX(5deg) rotateY(-5deg);
+    border-color: var(--accent-primary);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 30px var(--accent-glow);
+    z-index: 10;
+  }
+
+  .testimony-content { transform: translateZ(30px); }
+  .quote-icon { font-family: 'Noto Sans', sans-serif; font-size: 4rem; color: var(--accent-primary); opacity: 0.3; position: absolute; top: 10px; left: 20px; line-height: 1; pointer-events: none; transform: translateZ(10px); }
+  .testimony-text { font-size: 1rem; line-height: 1.7; color: var(--text-main); margin-bottom: 20px; font-style: italic; position: relative; z-index: 2; }
+  .testimony-author { display: flex; align-items: center; gap: 15px; border-top: 1px solid var(--accent-glow); padding-top: 20px; }
+  .author-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--bg-dark); border: 2px solid var(--accent-primary); display: flex; justify-content: center; align-items: center; font-weight: 900; color: var(--accent-primary); font-size: 1.2rem;}
+  .author-info h4 { font-family: 'Noto Sans', sans-serif; font-size: 1.1rem; color: var(--accent-primary); }
+  .author-info p { font-size: 0.85rem; color: #a0a4ff88; }
+
+  .scroll-indicator {
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    color: var(--accent-primary); opacity: 0.7; font-size: 0.9rem; margin-top: -30px;
+    animation: bounce-horizontal 2s infinite; pointer-events: none;
+  }
+  @keyframes bounce-horizontal {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+  }
+
+  /* ========================================================
+     SOCIAL TILES SECTION
+     ======================================================== */
+  .social-section { padding: 100px 0 150px 0; background: var(--bg-dark); position: relative; z-index: 14; }
+  .social-grid { 
+    display: flex; 
+    justify-content: center; 
+    gap: 30px; 
+    flex-wrap: wrap; 
+    margin-top: 50px; 
+    perspective: 1200px; 
+  }
+  
+  .social-tile {
+    width: 120px; height: 120px;
+    background: var(--bg-panel); border-radius: 20px;
+    display: flex; flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    text-decoration: none; color: var(--text-main);
+    border: 1px solid rgba(160, 164, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.05);
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .social-tile svg { width: 40px; height: 40px; margin-bottom: 10px; transform: translateZ(20px); transition: transform 0.4s; fill: currentColor; }
+  .social-tile span { font-family: 'Noto Sans', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; transform: translateZ(15px); transition: transform 0.4s; }
+
+  .social-tile:hover { transform: translateY(-15px) rotateX(10deg) rotateY(10deg) scale(1.1); }
+  .social-tile:hover svg { transform: translateZ(40px) scale(1.2); }
+  .social-tile:hover span { transform: translateZ(30px); }
+
+  .tile-ig:hover { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-color: transparent; box-shadow: 0 20px 40px rgba(225, 48, 108, 0.4); }
+  .tile-yt:hover { background: var(--color-yt); border-color: var(--color-yt); box-shadow: 0 20px 40px rgba(255, 0, 0, 0.4); }
+  .tile-li:hover { background: var(--color-li); border-color: var(--color-li); box-shadow: 0 20px 40px rgba(10, 102, 194, 0.4); }
+  .tile-bh:hover { background: var(--color-bh); border-color: var(--color-bh); box-shadow: 0 20px 40px rgba(23, 105, 255, 0.4); }
+  .tile-mail:hover { background: var(--color-mail); border-color: var(--color-mail); box-shadow: 0 20px 40px rgba(234, 67, 53, 0.4); }
+
+  /* MOBILE RESPONSIVENESS */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; text-align: center; transform: none !important; } 
+    .hero h1 { font-size: 12vw; }
+    .hero-content, .hero-visual { transform: none !important; }
+    .about-revelio { padding: 60px 0; } 
+    .revelio-3d-wrapper { height: 600px; }
+    .pensieve-track { gap: 15vw; padding: 0 80vw 0 10vw; } 
+    .memory-landscape { width: 350px; height: 197px; } .memory-portrait { width: 250px; height: 444px; }
+  }
+  
+  @media (max-width: 768px) {
+    /* Modify Nav to floating bottom pill on mobile for thumb-reachability */
+    .magic-nav {
+      top: auto;
+      bottom: 20px;
+      width: 90%;
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding: 10px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      animation: nav-float-mobile 0.8s ease-out forwards;
+    }
+    .magic-nav::-webkit-scrollbar { display: none; }
+    @keyframes nav-float-mobile { 0% { bottom: -50px; opacity: 0; } 100% { bottom: 20px; opacity: 1; } }
+    .nav-link { white-space: nowrap; font-size: 0.75rem; padding: 8px 15px; }
+
+    .section-title { font-size: 2.5rem; }
+    .social-tile { width: 100px; height: 100px; }
+    .testimony-card { width: 85vw; }
+    .magic-orb { width: 180px; height: 180px; }
+    .ring-1 { width: 280px; height: 280px; }
+    .ring-2 { width: 400px; height: 400px; }
+    .revelio-layer { padding: 30px; }
+    .revealed-content h3 { font-size: 2rem; }
+    .testimonials-3d-container { gap: 20px; padding: 20px 5vw 40px 5vw; }
+  }
+</style>
+</head>
+<body id="top">
+
+  <div class="magic-bg"></div>
+  <div class="dust-particles"></div>
+
+  <nav class="magic-nav">
+    <a href="#top" class="nav-link">Home</a>
+    <a href="#about-section" class="nav-link">About</a>
+    <a href="#skills-section" class="nav-link">Skills</a>
+    <a href="#pensieve-trigger" class="nav-link">Projects</a>
+    <a href="#testimonials" class="nav-link">Testimonials</a>
+    <a href="#social-links" class="nav-link">Connect</a>
+  </nav>
+
+  <div class="hero-wrapper" id="hero-wrapper">
+    <section class="hero container" id="hero-3d">
+      <div class="hero-content">
+        <h1 class="gsap-hero"><span>Crafting</span></h1>
+        <h1 class="gsap-hero"><span>Digital</span></h1>
+        <h1 class="gsap-hero"><span style="color: var(--accent-primary);">Narratives</span></h1>
+        <p class="hero-sub gsap-hero">Video Editor & Visual Storyteller. Transforming raw footage into captivating visual experiences.</p>
+      </div>
+      <div class="hero-visual gsap-hero">
+        <div class="magic-orb" id="magic-orb">
+          <img src="assets/Logo.jpg" alt="Logo" class="hero-logo" id="hero-logo">
+        </div>
+        <div class="orbit-ring ring-1"></div>
+        <div class="orbit-ring ring-2"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="wand-divider wand-divider-1"></div>
+
+  <section class="about-revelio container" id="about-section">
+    <div class="text-center gsap-fade-up" style="margin-bottom: 40px;">
+      <h2 class="section-title">About ME!</h2>
+    </div>
+    
+    <div class="revelio-3d-wrapper gsap-revelio-entrance">
+      <div class="revelio-card" id="revelio-card">
+        <button class="btn-reveal-all" id="btn-reveal-all">LUMOS MAXIMA (Reveal All)</button>
+        <div class="revelio-layer revelio-obscured">
+          <div class="rune-pattern"></div>
+          <h3 class="obscured-text">Cast Revelio (Hover) to uncover my true identity...</h3>
+        </div>
+        
+        <div class="revelio-layer revelio-revealed" id="revelio-revealed">
+          <div class="revealed-content">
+            <h3>The Visual Storyteller</h3>
+            <p>Hi, I’m Kushagra Kesarwani, a video editor and 3D motion designer passionate about turning ideas into cinematic visuals. I love experimenting with design, pacing, and storytelling to create content that feels modern, emotional, and impactful.</p>
+            <p>Over time, I’ve explored different styles across editing, motion design, and 3D visuals. Whether it’s a personal project, creator content, or a brand-focused campaign, I focus on creating visuals that genuinely connect with people and leave a lasting impression.</p>
+            <p>Outside of work, I’m into anime, gaming, music, and discovering new visual styles that constantly influence my creativity and editing approach.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <div class="wand-divider wand-divider-2"></div>
+
+  <section class="skills" id="skills-section">
+    <div class="container">
+      <h2 class="section-title text-center gsap-fade-up">SKILLS</h2>
+      <div class="skills-grid" id="dynamic-skills"></div>
+    </div>
+  </section>
+
+  <div class="wand-divider wand-divider-3"></div>
+
+  <section class="pensieve-section" id="pensieve-trigger">
+    <div class="pensieve-vortex" id="pensieve-vortex"></div>
+    <div class="pensieve-header text-center">
+      <h2 class="section-title" style="margin-bottom: 0;">Check My Works!</h2>
+    </div>
+    
+    <div class="pensieve-container">
+      <div class="pensieve-track" id="dynamic-projects"></div>
+    </div>
+  </section>
+
+  <section class="testimonials-section" id="testimonials">
+    <div class="container text-center">
+      <h2 class="section-title">Here's What My CLIENTS Say!</h2>
+      <p style="color: var(--accent-primary); opacity: 0.8;">Swipe or scroll to see the truth behind the magic.</p>
+    </div>
+
+    <div class="testimonials-3d-container" id="dynamic-testimonials"></div>
+    
+    <div class="scroll-indicator">
+      <span>Scroll for more</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
+  </section>
+
+  <div class="wand-divider wand-divider-4"></div>
+
+  <section class="social-section" id="social-links">
+    <div class="container text-center">
+      <div class="spell-tag">Connect</div>
+      <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 5px;">Join the Network</h2>
+    </div>
+    
+    <div class="social-grid">
+      <a href="https://www.instagram.com/kush4gra_fx/" target="_blank" class="social-tile tile-ig">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span>INSTAGRAM</span>
+      </a>
+      
+      <a href="https://www.youtube.com/@Kushagrafx" target="_blank" class="social-tile tile-yt">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        <span>YOUTUBE</span>
+      </a>
+      
+      <a href="https://www.linkedin.com/in/kushagrafx/" target="_blank" class="social-tile tile-li">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        <span>LINKEDIN</span>
+      </a>
+      
+      <a href="https://www.behance.net/kushagrafx" target="_blank" class="social-tile tile-bh">
+        <svg viewBox="0 0 512 512" fill="currentColor"><path d="M232 237.2c31.8-15.2 48.4-38.2 48.4-74 0-70.6-52.6-87.8-113.3-87.8H0v354.4h171.8c64.4 0 124.9-30.9 124.9-102.9 0-44.5-21.1-77.4-64.7-89.7zM86.4 142.2h59.8c27.1 0 48.1 8.1 48.1 36.6 0 27.1-25.8 35.9-48.1 35.9H86.4V142.2zm0 216v-89.3h69.5c33.9 0 55.4 12.1 55.4 46.1 0 35.3-26.4 43.3-55.4 43.3H86.4zm285.5-174.5c-48.2 0-83.3 35.7-83.3 85.3 0 49 33.7 87.5 86.6 87.5 35.8 0 64.9-18.3 75.9-46.7h-36.2c-7.9 11-20.9 18.6-38.8 18.6-25 0-41.5-16.1-43.4-44.6h117.8c1-37.1-15-99.9-78.5-99.9zm-41 55.9c3.9-22 17.6-31.5 39.8-31.5 22.8 0 36.4 11 38.6 31.5h-78.4zM322.2 121h102.3v34.9H322.2z"/></svg>
+        <span>BEHANCE</span>
+      </a>
+      
+      <a href="mailto:kesarwanikushagra62@gmail.com" class="social-tile tile-mail">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.866l5.6-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/></svg>
+        <span>MAIL</span>
+      </a>
+    </div>
+  </section>
+
+  <script>
+    // =======================================================================
+    // 🛠️ CONTENT MANAGEMENT CONFIGURATION (EDIT HERE!) 🛠️
+    // A non-technical person can easily add, remove, or modify items below.
+    // =======================================================================
+    
+    const PORTFOLIO_DATA = {
+      
+      // --- 1. SKILLS ---
+      skills: [
+        {
+          name: "Premiere Pro",
+          color: "#A0A4ff",
+          delay: 0.1,
+          iconSVG: `<rect width="102" height="102" x="13" y="13" rx="14"/><text x="64" y="80" fill="#000000" font-family="Arial,sans-serif" font-size="64" font-weight="700" text-anchor="middle">Pr</text>`
+        },
+        {
+          name: "After Effects",
+          color: "#EDEEFF",
+          delay: 0.2,
+          iconSVG: `<rect width="102" height="102" x="13" y="13" rx="14"/><text x="64" y="80" fill="#000000" font-family="Arial,sans-serif" font-size="64" font-weight="700" text-anchor="middle">Ae</text>`
+        },
+        {
+          name: "Photoshop",
+          color: "#A0A4ff",
+          delay: 0.3,
+          iconSVG: `<rect width="102" height="102" x="13" y="13" rx="14"/><text x="64" y="80" fill="#000000" font-family="Arial,sans-serif" font-size="64" font-weight="700" text-anchor="middle">Ps</text>`
+        },
+        {
+          name: "Illustrator",
+          color: "#EDEEFF",
+          delay: 0.4,
+          iconSVG: `<rect width="102" height="102" x="13" y="13" rx="14"/><text x="64" y="80" fill="#000000" font-family="Arial,sans-serif" font-size="64" font-weight="700" text-anchor="middle">Ai</text>`
+        },
+        {
+          name: "Blender",
+          color: "#A0A4ff",
+          delay: 0.5,
+          iconSVG: `<polygon points="64,20 104,40 104,88 64,108 24,88 24,40" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><line x1="24" y1="40" x2="64" y2="60" stroke="currentColor" stroke-width="8"/><line x1="104" y1="40" x2="64" y2="60" stroke="currentColor" stroke-width="8"/><line x1="64" y1="108" x2="64" y2="60" stroke="currentColor" stroke-width="8"/>`
+        }
+      ],
+
+      // --- 2. PROJECTS (YOUTUBE VIDEOS) ---
+      projects: [
+        { videoId: "nMTIqc1_oBo", title: "Venom Gaming Extract", category: "Cinematic Montage", type: "landscape" },
+        { videoId: "npJtLpcPuN0", title: "comicTeller Sequence", category: "Story Narrative", type: "landscape" },
+        { videoId: "n_yIPhJ3YIc", title: "Chai Pe Facts Lore", category: "Knowledge Bite", type: "landscape" },
+        { videoId: "t7NOTp_aLHE", title: "Dynamic Edge", category: "Gameplay Edit", type: "landscape" },
+        { videoId: "VtivId5aTXA", title: "Narrative Flow", category: "Pacing & Sound Design", type: "landscape" },
+        { videoId: "wIzxvy_vHmA", title: "Visual Elements", category: "Effects Breakdown", type: "landscape" },
+        { videoId: "SWPgATVWr4g", title: "comicTeller Reel", category: "Quick Edit", type: "portrait" },
+        { videoId: "PkDzaQehTb0", title: "Chai Pe Facts Reel", category: "Viral Cut", type: "portrait" }
+      ],
+
+      // --- 3. TESTIMONIALS ---
+      testimonials: [
+        {
+          quote: "The editing pace is absolutely phenomenal. They managed to take our raw stream highlights and turn them into a cinematic masterpiece that held viewer retention through the roof.",
+          author: "Venom Gaming",
+          role: "Content Creator"
+        },
+        {
+          quote: "Incredible storytelling through the timeline. The sound design and precise cuts brought a whole new layer of depth to the narrative we were trying to achieve.",
+          author: "comicTeller",
+          role: "YouTube Channel"
+        },
+        {
+          quote: "Flawless execution and highly responsive to feedback. Every cut feels intentional and the overall aesthetic perfectly matches our brand guidelines.",
+          author: "Chai Pe Facts",
+          role: "Infotainment Platform"
+        },
+        {
+          quote: "They completely revitalized our visual identity. The dynamic motion graphics and pacing kept our engagement metrics higher than they've ever been in the past two years.",
+          author: "Dynamic Edge",
+          role: "Esports Organization"
+        },
+        {
+          quote: "Working together was a breeze. They understood our vision immediately and delivered a final cut that was not only technically perfect but emotionally resonant.",
+          author: "Nexus Studio",
+          role: "Creative Agency"
+        },
+        {
+          quote: "A true wizard in Premiere and After Effects. The turnaround time was unbelievable, and the final output required absolutely zero revisions. Highly recommended.",
+          author: "The Daily Byte",
+          role: "Tech Review Channel"
+        }
+      ]
+    };
+
+    // =======================================================================
+    // ⚙️ AUTOMATIC GENERATOR SCRIPT (DO NOT TOUCH BELOW HERE) ⚙️
+    // =======================================================================
+
+    // 1. Generate Skills
+    const skillsHTML = PORTFOLIO_DATA.skills.map(skill => `
+      <div class="skill-card-wrapper gsap-spellbook" style="--delay: ${skill.delay};">
+        <div class="skill-card" style="--hover-color: ${skill.color};">
+          <svg class="skill-icon" viewBox="0 0 128 128" fill="currentColor">${skill.iconSVG}</svg>
+          <span class="skill-name">${skill.name}</span>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('dynamic-skills').innerHTML = skillsHTML;
+
+    // 2. Generate Projects
+    const projectsHTML = PORTFOLIO_DATA.projects.map(project => {
+      const link = project.type === "portrait" ? `https://www.youtube.com/shorts/${project.videoId}` : `https://www.youtube.com/watch?v=${project.videoId}`;
+      return `
+      <div class="memory-${project.type}">
+        <div class="memory-card" data-vid="${project.videoId}" onclick="window.open('${link}', '_blank')">
+          <div class="memory-play-btn">▶</div>
+          <div class="memory-content">
+            <h3>${project.title}</h3>
+            <p>${project.category}</p>
+          </div>
+        </div>
+      </div>
+    `}).join('');
+    document.getElementById('dynamic-projects').innerHTML = projectsHTML;
+
+    // 3. Generate Testimonials
+    const testimonialsHTML = PORTFOLIO_DATA.testimonials.map(t => {
+      const initial = t.author.charAt(0).toUpperCase();
+      return `
+      <div class="testimony-card">
+        <div class="testimony-content">
+          <div class="quote-icon">"</div>
+          <p class="testimony-text">${t.quote}</p>
+          <div class="testimony-author">
+            <div class="author-avatar">${initial}</div>
+            <div class="author-info">
+              <h4>${t.author}</h4>
+              <p>${t.role}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `}).join('');
+    document.getElementById('dynamic-testimonials').innerHTML = testimonialsHTML;
+
+    // ==========================================
+    // 🎨 GSAP ANIMATIONS & INTERACTIONS
+    // ==========================================
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.to('#hero-wrapper', { scrollTrigger: { trigger: '#about-section', start: 'top bottom', end: 'top top', scrub: true }, opacity: 0, scale: 0.8, filter: 'blur(20px)' });
+    gsap.utils.toArray('.wand-divider').forEach(line => { gsap.from(line, { scrollTrigger: { trigger: line, start: "top 95%", end: "top 70%", scrub: true }, scaleX: 0, opacity: 0 }); });
+    gsap.fromTo('#skills-section', { clipPath: 'ellipse(0% 0% at 50% 50%)', backgroundColor: 'rgba(160, 164, 255, 0.2)' }, { scrollTrigger: { trigger: '#skills-section', start: 'top 85%', end: 'top 30%', scrub: 1 }, clipPath: 'ellipse(150% 150% at 50% 50%)', backgroundColor: 'rgba(30, 32, 70, 0.2)' });
+    
+    gsap.from('#pensieve-vortex', { scrollTrigger: { trigger: '#pensieve-trigger', start: 'top bottom', end: 'top top', scrub: true }, scale: 0, opacity: 0, rotation: -180 });
+
+    const heroWrapper = document.getElementById('hero-wrapper');
+    const hero3d = document.getElementById('hero-3d');
+    heroWrapper.addEventListener('mousemove', (e) => {
+      if(window.innerWidth > 1024) { hero3d.style.transform = `rotateY(${(e.clientX / window.innerWidth - 0.5) * 20}deg) rotateX(${(e.clientY / window.innerHeight - 0.5) * -20}deg)`; }
+    });
+    heroWrapper.addEventListener('mouseleave', () => { hero3d.style.transform = `rotateY(0deg) rotateX(0deg)`; });
+    gsap.from(".gsap-hero", { y: 60, opacity: 0, duration: 1.2, stagger: 0.2, ease: "power4.out", delay: 0.2 });
+
+    window.addEventListener('load', () => {
+      gsap.to("#hero-logo", { opacity: 0.9, duration: 0.1, repeat: 5, yoyo: true, delay: 0.5, ease: "rough", onComplete: () => { gsap.set("#hero-logo", { opacity: 0.9 }); } });
+    });
+
+    const revelioCard = document.getElementById('revelio-card');
+    const revelioRevealed = document.getElementById('revelio-revealed');
+    const btnRevealAll = document.getElementById('btn-reveal-all');
+
+    gsap.from(".gsap-revelio-entrance", { scrollTrigger: { trigger: ".gsap-revelio-entrance", start: "top 85%" }, y: 100, rotationX: -10, opacity: 0, duration: 1.5, ease: "back.out(1.2)" });
+
+    btnRevealAll.addEventListener('click', (e) => {
+      e.stopPropagation(); revelioCard.classList.toggle('unlocked');
+      if(revelioCard.classList.contains('unlocked')) { btnRevealAll.innerText = "NOX (Hide)"; } 
+      else { btnRevealAll.innerText = "LUMOS MAXIMA (Reveal All)"; revelioRevealed.style.setProperty('--rev-x', `-500px`); revelioRevealed.style.setProperty('--rev-y', `-500px`); }
+    });
+
+    revelioCard.addEventListener('mousemove', (e) => {
+      const rect = revelioCard.getBoundingClientRect();
+      if(!revelioCard.classList.contains('unlocked')) {
+        revelioRevealed.style.setProperty('--rev-x', `${e.clientX - rect.left}px`);
+        revelioRevealed.style.setProperty('--rev-y', `${e.clientY - rect.top}px`);
+      }
+      revelioCard.style.transform = `rotateX(${(((e.clientY - rect.top) - rect.height/2) / (rect.height/2)) * -8}deg) rotateY(${(((e.clientX - rect.left) - rect.width/2) / (rect.width/2)) * 8}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+    revelioCard.addEventListener('mouseleave', () => {
+      if(!revelioCard.classList.contains('unlocked')) { revelioRevealed.style.setProperty('--rev-x', `-500px`); revelioRevealed.style.setProperty('--rev-y', `-500px`); }
+      revelioCard.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    });
+
+    // Pensieve Gallery Interactions
+    const track = document.getElementById("dynamic-projects");
+    let getScrollAmount = () => -(track.scrollWidth - window.innerWidth);
+    ScrollTrigger.create({ trigger: "#pensieve-trigger", start: "top top", end: () => `+=${getScrollAmount() * -1}`, pin: true, animation: gsap.to(track, { x: getScrollAmount, ease: "none" }), scrub: 1, invalidateOnRefresh: true });
+
+    document.querySelectorAll('.memory-card').forEach(card => {
+      let vid = card.getAttribute('data-vid');
+      let img = new Image();
+      img.onload = function() { card.style.backgroundImage = `url('${this.width === 120 ? `https://img.youtube.com/vi/${vid}/hqdefault.jpg` : `https://img.youtube.com/vi/${vid}/maxresdefault.jpg`}')`; };
+      img.onerror = function() { card.style.backgroundImage = `url('https://img.youtube.com/vi/${vid}/hqdefault.jpg')`; };
+      img.src = `https://img.youtube.com/vi/${vid}/maxresdefault.jpg`;
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.transform = `rotateX(${((e.clientY - rect.top - rect.height/2) / (rect.height/2)) * -15}deg) rotateY(${((e.clientX - rect.left - rect.width/2) / (rect.width/2)) * 15}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`; });
+    });
+
+    // Testimonials Mouse Drag Scroll
+    const slider = document.getElementById('dynamic-testimonials');
+    let isDown = false, startX, scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
+    slider.addEventListener('mouseleave', () => { isDown = false; });
+    slider.addEventListener('mouseup', () => { isDown = false; });
+    slider.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2;
+      slider.scrollLeft = scrollLeft - walk;
+    });
+
+  </script>
+</body>
+</html>
