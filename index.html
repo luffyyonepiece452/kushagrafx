@@ -198,8 +198,8 @@
 <script>
   // ================= EDIT YOUR CONTENT HERE =================
 
-  // 1) SHOWREEL (top right). Paste your YouTube video ID. Leave "" to show a placeholder.
-  const SHOWREEL_ID = "";
+  // 1) SHOWREEL (top right). Your YouTube video ID.
+  const SHOWREEL_ID = "wYhkUOG4sTM";
 
   // 2) WORK. Leave videoId as "" for an empty placeholder slot.
   //    Layout: workA (4 landscape), reels (4 vertical), workB (4 landscape)
@@ -241,52 +241,4 @@
     { quote: "The editing pace is absolutely phenomenal. They turned our raw stream highlights into a cinematic piece that kept viewers watching.", author: "Venom Gaming", role: "Content Creator" },
     { quote: "Incredible storytelling through the timeline. The sound design and precise cuts added a new layer of depth to our narrative.", author: "comicTeller", role: "YouTube Channel" },
     { quote: "Flawless execution and quick to act on feedback. Every cut feels intentional and matches our brand.", author: "Chai Pe Facts", role: "Infotainment Platform" },
-    { quote: "They revitalized our visual identity. The motion graphics and pacing pushed our engagement higher than ever.", author: "Dynamic Edge", role: "Esports Organization" },
-    { quote: "Working together was a breeze. They understood our vision immediately and delivered a final cut that was technically perfect and emotional.", author: "Nexus Studio", role: "Creative Agency" },
-    { quote: "Fast turnaround, and the final output needed zero revisions. Highly recommended.", author: "The Daily Byte", role: "Tech Review Channel" }
-  ];
-  // ===========================================================
-
-  const $ = id => document.getElementById(id);
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
-  // Showreel: autoplays muted and loops, like the reference site
-  $('reel').innerHTML = SHOWREEL_ID
-    ? `<iframe src="https://www.youtube-nocookie.com/embed/${SHOWREEL_ID}?autoplay=1&mute=1&loop=1&playlist=${SHOWREEL_ID}&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Showreel"></iframe>`
-    : `<div class="ph" style="height:100%"><div><b>&#9654;</b>Your showreel goes here</div></div>`;
-
-  const card = (p, kind) => {
-    if (!p.videoId) return `<div class="card ${kind} ph"><div><b>&#9654;</b>Video coming soon</div></div>`;
-    return `<button class="card has ${kind}" data-id="${p.videoId}" data-kind="${kind}"
-      style="background-image:url('https://img.youtube.com/vi/${p.videoId}/hqdefault.jpg')" aria-label="Play ${esc(p.title)}">
-      <span class="play">&#9654;</span>
-      <span class="meta"><h4>${esc(p.title)}</h4><span>${esc(p.category)}</span></span></button>`;
-  };
-  $('work-a').innerHTML = WORK.workA.map(p => card(p, 'land')).join('');
-  $('reels').innerHTML  = WORK.reels.map(p => card(p, 'port')).join('');
-  $('work-b').innerHTML = WORK.workB.map(p => card(p, 'land')).join('');
-
-  $('tools').innerHTML = TOOLS.map(t =>
-    `<div class="tool">${t.logo ? `<img src="${esc(t.logo)}" alt="${esc(t.name)} logo">` : t.svg}<span>${esc(t.name)}</span></div>`).join('');
-
-  $('slider').innerHTML = TESTIMONIALS.map(t => `
-    <figure class="quote"><p>${esc(t.quote)}</p>
-      <figcaption class="who"><div class="avatar">${esc(t.author[0].toUpperCase())}</div>
-      <div><h5>${esc(t.author)}</h5><small>${esc(t.role)}</small></div></figcaption></figure>`).join('');
-
-  // Video modal
-  const modal = $('modal'), box = $('modal-box'), player = $('player');
-  document.addEventListener('click', e => {
-    const c = e.target.closest('.card.has');
-    if (c) {
-      box.classList.toggle('vert', c.dataset.kind === 'port');
-      player.src = `https://www.youtube-nocookie.com/embed/${c.dataset.id}?autoplay=1&rel=0`;
-      modal.classList.add('open');
-      $('close').focus();
-    } else if (e.target === modal || e.target.id === 'close') closeModal();
-  });
-  function closeModal() { modal.classList.remove('open'); player.src = ''; }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-</script>
-</body>
-</html>
+    { quote: "They revitalized our visual identity. The motion graphics and pacing pushed our engagement higher than ever.", author: "Dynamic Edge", role: "Esports
