@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kushagrafx | Video Editor & 3D Motion Designer</title>
 <meta name="description" content="2D/3D motion designer and video editor. Turning creative ideas into scroll-stopping visuals.">
+<link rel="icon" type="image/jpeg" href="assets/Logo.jpg">
+<link rel="apple-touch-icon" href="assets/Logo.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700;900&family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /* ===== CHANGE FONTS AND COLORS HERE ===== */
@@ -49,7 +51,8 @@
   .work-head h2 { margin-bottom:8px; }
   .work-head p { color:var(--muted); max-width:560px; }
   .grid-land { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-bottom:22px; }
-  .grid-port { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; margin-bottom:22px; }
+  /* Reels: 2 vertical videos, centered. Change 300px to make them bigger or smaller */
+  .grid-port { display:grid; grid-template-columns:repeat(2,minmax(0,300px)); justify-content:center; gap:22px; margin-bottom:22px; }
   .card { position:relative; display:block; width:100%; border:1px solid var(--glow); border-radius:14px; overflow:hidden; background:var(--panel) center/cover no-repeat; cursor:pointer; text-align:left; color:inherit; font:inherit; transition:transform .3s,border-color .3s,box-shadow .3s; }
   .card.land { aspect-ratio:16/9; }
   .card.port { aspect-ratio:9/16; }
@@ -202,7 +205,7 @@
   const SHOWREEL_ID = "wYhkUOG4sTM";
 
   // 2) WORK. Leave videoId as "" for an empty placeholder slot.
-  //    Layout: workA (4 landscape), reels (4 vertical), workB (4 landscape)
+  //    Layout: workA (4 landscape), reels (2 vertical), workB (4 landscape)
   const WORK = {
     workA: [
       { videoId: "tzaHOGfp3eQ", title: "RED", category: "3D Music Video" },
@@ -211,14 +214,12 @@
       { videoId: "Wf-V0x_MFQc", title: "Podcast", category: "Podcast Intro" }
     ],
     reels: [
-      { videoId: "SWPgATVWr4g", title: "Lakme Ad", category: "Velocity" },
-      { videoId: "PkDzaQehTb0", title: "Klaviyo", category: "Motion Graphics" },
-      { videoId: "", title: "", category: "" },
-      { videoId: "", title: "", category: "" }
+      { videoId: "IkGeKztWFz4", title: "Lakme Ad", category: "Velocity" },
+      { videoId: "VBtqResRa2Q", title: "Klaviyo", category: "Motion Graphics" }
     ],
     workB: [
-      { videoId: "VtivId5aTXA", title: "Dragon Chat", category: "Motion Graphics SaaS" },
-      { videoId: "wIzxvy_vHmA", title: "Signal", category: "Motion Graphics VSL" },
+      { videoId: "vMsYGyDynPo", title: "Dragon Chat", category: "Motion Graphics SaaS" },
+      { videoId: "KMPf_akXhkc", title: "Signal", category: "Motion Graphics VSL" },
       { videoId: "", title: "", category: "" },
       { videoId: "", title: "", category: "" }
     ]
